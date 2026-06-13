@@ -1,0 +1,37 @@
+{
+  "name": "stoat-types",
+  "version": "0.0.8",
+  "description": "Stoat shared types",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*.d.ts",
+    "dist/**/*.js",
+    "dist/**/*.json"
+  ],
+  "scripts": {
+    "build": "npm run gen-types && tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build",
+    "gen-types": "json2ts -i 'src/schemas/**/*.json' --unreachableDefinitions -o src/schemas && for f in src/schemas/*.d.ts; do mv -- \"$f\" \"${f%.d.ts}.ts\"; done"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stoat-dev/stoat-action.git"
+  },
+  "author": "Stoat Dev",
+  "keywords": [
+    "stoat",
+    "types"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stoat-dev/stoat-action/issues"
+  },
+  "homepage": "https://github.com/stoat-dev/stoat-action#readme",
+  "devDependencies": {
+    "@octokit/plugin-rest-endpoint-methods": "^13.2.1",
+    "json-schema-to-typescript": "^14.0.4",
+    "typescript": "^5.4.5",
+    "utility-types": "^3.11.0"
+  }
+}
