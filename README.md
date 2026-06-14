@@ -8,6 +8,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
+| v0.0.12 | [`v0.0.12`](https://github.com/chainguard-actions/stoat-dev-stoat-action/tree/v0.0.12) | [`14f3c5d`](https://github.com/stoat-dev/stoat-action/commit/14f3c5d14004e02bd180fa878da1265c53cf3fe2) |
 | v0.0.13 | [`v0.0.13`](https://github.com/chainguard-actions/stoat-dev-stoat-action/tree/v0.0.13) | [`64fc3fe`](https://github.com/stoat-dev/stoat-action/commit/64fc3fe4614f3db7fd881ee7ada80935760f2cc0) |
 | v0.0.14 | [`v0.0.14`](https://github.com/chainguard-actions/stoat-dev-stoat-action/tree/v0.0.14) | [`5cfc3cd`](https://github.com/stoat-dev/stoat-action/commit/5cfc3cdf5677dfcba5e4d6ecb2b9b0098224923b) |
 
