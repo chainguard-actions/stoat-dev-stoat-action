@@ -1,0 +1,45 @@
+---
+version: 1
+enabled: true
+plugins:
+  job_runtime:
+    enabled: true
+  static_hosting:
+    test_coverage_action:
+      metadata:
+        name: Action Test Coverage
+      path: action/coverage/lcov-report
+    test_coverage_action_single_file:
+      metadata:
+        name: Action Test Coverage (single file)
+      path: action/coverage/lcov-report/index.html
+    test_coverage_cli:
+      metadata:
+        name: CLI Test Coverage
+      path: cli/coverage/lcov-report
+    types_ts_coverage:
+      metadata:
+        name: Types TS Coverage
+      path: types/coverage-ts
+    docs:
+      metadata:
+        name: Documentation
+      path: docs/build
+  # image_diff:
+  #   compare_logo_image:
+  #     metadata:
+  #       name: Logo
+  #     image: docs/static/img/logo-128.png
+  #     baseline: docs/build/baseline-logo-128.png
+  metric:
+    action_runner_memory:
+      filename: action_runner_memory.jsonl
+  chart:
+    action_runner_memory_chart:
+      title: Runner Memory Usage
+      y_title: Memory (bytes)
+      tags:
+        - Total
+        - Used
+        - Free
+        - Buff/Cache
