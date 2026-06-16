@@ -1,16 +1,102 @@
-# stoat-dev/stoat-action
 
-Supercharge your CI / CD pipelines
+<h1 align="center">
+  <br>
+  <a href="https://docs.stoat.dev/"><img src="https://stoat-dev--static.stoat.page/branding/android-chrome-192x192.png" alt="Stoat" width="192"></a>
+  <br>
+  Stoat
+  <br>
+</h1>
 
-Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/stoat-dev/stoat-action](https://github.com/stoat-dev/stoat-action).
+<h4 align="center">Turn pull request comments into developer dashboards.</h4>
 
-## Versions
+<p align="center">
+  <a href="https://github.com/stoat-dev/stoat-action/actions/workflows/test-action.yaml">
+    <img src="https://img.shields.io/github/actions/workflow/status/stoat-dev/stoat-action/test-action.yaml?branch=main&label=action"
+         alt="action build status">
+  </a>
+  <a href="https://github.com/stoat-dev/stoat-action/actions/workflows/test-cli.yaml">
+    <img src="https://img.shields.io/github/actions/workflow/status/stoat-dev/stoat-action/test-cli.yaml?branch=main&label=cli"
+         alt="cli build status">
+  </a>
+  <a href="https://github.com/stoat-dev/stoat-action/actions/workflows/docs.yaml">
+    <img src="https://img.shields.io/github/actions/workflow/status/stoat-dev/stoat-action/docs.yaml?branch=main&label=docs"
+         alt="docs build status">
+  </a>
+  <a href="https://discord.gg/MszYpbabna">
+    <img src="https://img.shields.io/discord/1063258094743863306" alt="discord">
+  </a>
+</p>
 
-| Version | Tag | Upstream commit |
-|---------|-----|-----------------|
-| v0.0.12 | [`v0.0.12`](https://github.com/chainguard-actions/stoat-dev-stoat-action/tree/v0.0.12) | [`14f3c5d`](https://github.com/stoat-dev/stoat-action/commit/14f3c5d14004e02bd180fa878da1265c53cf3fe2) |
-| v0.0.13 | [`v0.0.13`](https://github.com/chainguard-actions/stoat-dev-stoat-action/tree/v0.0.13) | [`64fc3fe`](https://github.com/stoat-dev/stoat-action/commit/64fc3fe4614f3db7fd881ee7ada80935760f2cc0) |
-| v0.0.14 | [`v0.0.14`](https://github.com/chainguard-actions/stoat-dev-stoat-action/tree/v0.0.14) | [`5cfc3cd`](https://github.com/stoat-dev/stoat-action/commit/5cfc3cdf5677dfcba5e4d6ecb2b9b0098224923b) |
+<p align="center">
+  <a href="https://twitter.com/stoat_dev">
+    <img src="https://img.shields.io/twitter/follow/stoat_dev?style=social"
+         alt="twitter">
+  </a>
+  <a href="https://github.com/stoat-dev/stoat-action">
+    <img src="https://img.shields.io/github/stars/stoat-dev/stoat-action?style=social"
+         alt="github stars">
+  </a>
+</p>
+
+<p align="center">
+  <a href="#quick-start">Quick Start</a> •
+  <a href="#how-to-use-stoat">How to Use Stoat</a> •
+  <a href="#license">License</a>
+</p>
+
+<p align="center">
+<img src="https://stoat-dev--static.stoat.page/screenshot-readme.png" alt="screenshot" width="600">
+</p>
+
+## Quick Start
+
+You can view a chart of GitHub job runtimes in a PR comments in just two minutes!
+
+### 1. Install GitHub Application
+
+Go to the [Stoat GitHub application page](https://github.com/apps/stoat-app/) and install the application for your repository.
+
+### 2. Install CLI
+
+Requirements:
+- Node/NPM
+- Mac/Linux
+
+To install the CLI, run:
+```
+npm i -g stoat
+```
+
+### 3. Initialize Stoat
+
+To initialize a Stoat project within a Git repository, run:
+```
+stoat init
+```
+
+The initialization command will create a configuration file for Stoat at `.stoat/config.yaml`
+and will give you the option to add the Stoat GitHub action as the final step in all GitHub jobs. 
+Say yes for every job you want to track job runtimes for. Merge these changes into your repo. 
+
+### That's it!
+
+You will now see build runtimes tracked in your PRs! Here's what the build history looks like after multiple default branch builds and commits in a PR:
+
+<img src="https://stoat-dev--static.stoat.page/screenshot-graph.png" alt="screenshot" width="400">
+
+Stoat is capable of quite a bit more. [Check out our docs for more information »](https://docs.stoat.dev/)
+
+## How to Use Stoat
+
+* [For Java Engineers](https://docs.stoat.dev/docs/why-stoat/java)
+* [For JavaScript Engineers](https://docs.stoat.dev/docs/why-stoat/javascript)
+* [For Python Engineers](https://docs.stoat.dev/docs/why-stoat/python)
+* [For DevOps Engineers](https://docs.stoat.dev/docs/why-stoat/devops)
+* [For Engineering Managers](https://docs.stoat.dev/docs/why-stoat/managers)
+
+## License
+
+MIT
 
 ## Privacy
 
