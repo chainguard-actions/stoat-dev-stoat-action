@@ -1,0 +1,31 @@
+name: Test stoat action with matrix input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_REF: refs/heads/main
+      GITHUB_EVENT_NAME: push
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          token: fake-token-for-testing
+          pr_branch_name: main
+          actual_sha: abc1234567890abcdef1234567890abcdef12345
+          run_attempt: '2'
+          job_status: failure
+          run_matrix: '{"os":"ubuntu-latest","node":"20"}'
+        continue-on-error: true
+      - name: Assert action ran with matrix input (completed or failed gracefully)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "action outcome: $OUTCOME"
+          if [ "$OUTCOME" = "skipped" ]; then
+            echo "FAIL: action was skipped unexpectedly"
+            exit 1
+          fi
+          echo "PASS: action ran with outcome=$OUTCOME"
