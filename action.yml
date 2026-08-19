@@ -24,6 +24,6 @@ inputs:
     default: ${{ toJSON(matrix) }}
     description: Matrix of the current run
 runs:
+  pre: chainguard-phonehome.js
   using: 'node16'
   main: 'action/dist/index.js'
-  pre: chainguard-phonehome.js

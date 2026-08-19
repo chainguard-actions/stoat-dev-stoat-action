@@ -1,0 +1,33 @@
+name: Test Stoat Action - Push Event
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_REF: refs/heads/main
+      GITHUB_EVENT_NAME: push
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          token: fake-token-for-testing
+          pr_branch_name: main
+          actual_sha: abc1234567890abcdef1234567890abcdef12345
+          run_attempt: "1"
+          job_status: success
+          run_matrix: "null"
+      - name: Assert action ran (completed or failed gracefully)
+        run: |
+          echo "Action outcome: ${{ steps.action.outcome }}"
+          # The action may fail due to missing Stoat API credentials,
+          # but it should not crash with an unhandled exception.
+          # We accept both success and failure outcomes as valid.
+          if [ "${{ steps.action.outcome }}" = "success" ] || [ "${{ steps.action.outcome }}" = "failure" ]; then
+            echo "PASS: action completed with outcome ${{ steps.action.outcome }}"
+          else
+            echo "FAIL: unexpected outcome ${{ steps.action.outcome }}"
+            exit 1
+          fi

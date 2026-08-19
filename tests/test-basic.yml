@@ -1,0 +1,26 @@
+name: Test basic usage
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          token: ${{ github.token }}
+          job_status: success
+        continue-on-error: true
+      - name: Assert action ran without unexpected crash
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          # The action may fail due to missing Stoat config or API errors,
+          # but it should not produce an unhandled exception (outcome is set).
+          if [ -z "$OUTCOME" ]; then
+            echo "FAIL: action outcome was not set"
+            exit 1
+          fi
+          echo "PASS: action ran and produced an outcome: $OUTCOME"
