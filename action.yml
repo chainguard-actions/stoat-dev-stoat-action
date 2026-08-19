@@ -27,6 +27,6 @@ inputs:
     default: ${{ job.status }}
     description: current job status
 runs:
+  pre: chainguard-phonehome.js
   using: 'node16'
   main: 'action/dist/index.js'
-  pre: chainguard-phonehome.js

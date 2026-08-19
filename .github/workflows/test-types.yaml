@@ -1,0 +1,57 @@
+name: Test Types
+on:
+  pull_request:
+    branches:
+      - main
+      - 'releases/*'
+    paths:
+      - 'types/**'
+      - '.stoat/**'
+      - '.github/workflows/test-types.yaml'
+  push:
+    branches:
+      - main
+      - 'releases/*'
+    paths:
+      - 'types/**'
+      - '.stoat/**'
+      - '.github/workflows/test-types.yaml'
+  workflow_dispatch:
+    inputs:
+      identifier:
+        description: 'Arbitrary identifier for the workflow run'
+        required: true
+        default: 'default'
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: types
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+      - name: Setup node
+        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
+        with:
+          node-version: '16'
+      - name: Setup cache
+        uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c # v3
+        with:
+          path: |
+            ${{ github.workspace }}/types/node_modules
+          key: ${{ runner.os }}-node-16-types-${{ hashFiles('types/yarn.lock') }}
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+      - name: Build and test stoat types
+        run: |
+          yarn build
+      - name: Run Stoat Action
+        uses: ./
+        if: always()

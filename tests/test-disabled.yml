@@ -1,0 +1,26 @@
+name: Test Stoat disabled scenario
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create stoat config with enabled false
+        run: |
+          mkdir -p .stoat
+          cat > .stoat/config.yaml << 'EOF'
+          version: 1
+          enabled: false
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          token: ${{ github.token }}
+
+      - name: Assert action completed without failure
+        run: |
+          echo "Action completed successfully (stoat disabled path)"
+          echo "PASS"

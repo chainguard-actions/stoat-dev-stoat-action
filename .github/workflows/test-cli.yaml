@@ -1,0 +1,62 @@
+name: Test CLI
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'cli/**'
+      - '.stoat/**'
+      - '.github/workflows/test-cli.yaml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'cli/**'
+      - '.stoat/**'
+      - '.github/workflows/test-cli.yaml'
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: cli
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+      - name: Setup node
+        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
+        with:
+          node-version: '16'
+      - name: Setup cache
+        uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c # v3
+        with:
+          path: |
+            ${{ github.workspace }}/types/node_modules
+            ${{ github.workspace }}/action/node_modules
+            ${{ github.workspace }}/cli/node_modules
+          key: ${{ runner.os }}-node-16-cli-${{ hashFiles('types/yarn.lock') }}-${{ hashFiles('action/yarn.lock') }}-${{ hashFiles('cli/yarn.lock') }}
+      - name: Install types dependencies
+        working-directory: types
+        run: |
+          yarn install --frozen-lockfile
+      - name: Install action dependencies
+        working-directory: action
+        run: |
+          yarn install --frozen-lockfile
+      - name: Install cli dependencies
+        run: |
+          yarn install --frozen-lockfile
+      - name: Build and test stoat cli
+        run: |
+          yarn build
+          yarn test
+      - name: Check format
+        run: yarn format-check
+      - name: Run Stoat Action
+        uses: ./
+        if: always()
