@@ -1,0 +1,36 @@
+name: Test pull request event
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_REF: refs/pull/42/merge
+      GITHUB_EVENT_NAME: pull_request
+      GITHUB_HEAD_REF: feature-branch
+      GITHUB_BASE_REF: main
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # Overwrite the .stoat/config.yaml with enabled: false so the action skips
+      - name: Set up stoat config (disabled)
+        run: |
+          mkdir -p .stoat
+          printf -- '---\nversion: 1\nenabled: false\n' > .stoat/config.yaml
+          echo "Stoat config:"
+          cat .stoat/config.yaml
+
+      - id: action
+        uses: .
+        with:
+          token: fake-token
+          pr_branch_name: feature-branch
+          actual_sha: ${{ github.sha }}
+          run_attempt: "1"
+          job_status: success
+          run_matrix: '{"os":"ubuntu-latest"}'
+
+      - name: Assert action completed without error for pull request event
+        run: |
+          echo "Action completed successfully for pull request event (stoat was disabled)"
+          echo "PASS"

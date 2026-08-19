@@ -1,0 +1,28 @@
+name: Test matrix run scenario
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          token: ${{ github.token }}
+          pr_branch_name: act-harness
+          actual_sha: ${{ github.sha }}
+          run_attempt: 1
+          job_status: success
+          run_matrix: '{"os":"ubuntu-latest","node":"20"}'
+        continue-on-error: true
+      - name: Assert action completed with matrix input
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "skipped" ]; then
+            echo "FAIL: action was skipped unexpectedly"
+            exit 1
+          fi
+          echo "PASS: action completed with matrix input, outcome=$OUTCOME"

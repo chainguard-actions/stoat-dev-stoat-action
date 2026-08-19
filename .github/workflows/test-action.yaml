@@ -1,0 +1,75 @@
+name: Test Action
+on:
+  pull_request:
+    branches:
+      - main
+      - 'releases/*'
+    paths:
+      - 'action/**'
+      - '.stoat/**'
+      - '.github/workflows/test-action.yaml'
+  push:
+    branches:
+      - main
+      - 'releases/*'
+    paths:
+      - 'action/**'
+      - '.stoat/**'
+      - '.github/workflows/test-action.yaml'
+
+defaults:
+  run:
+    working-directory: action
+
+permissions: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Setup node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+      - name: Setup cache
+        uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c # v3
+        with:
+          path: |
+            ${{ github.workspace }}/types/node_modules
+            ${{ github.workspace }}/action/node_modules
+          key: ${{ runner.os }}-node-20-action-${{ hashFiles('types/yarn.lock') }}-${{ hashFiles('action/yarn.lock') }}
+      - name: Install types dependencies
+        working-directory: types
+        run: |
+          yarn install --frozen-lockfile
+      - name: Install action dependencies
+        run: |
+          yarn install --frozen-lockfile
+      - name: Build and test stoat action
+        run: |
+          yarn all
+      - name: Compare expected vs actual dist directories
+        run: |
+          if [ "$(git diff --ignore-space-at-eol dist/ | wc -l)" -gt "0" ]; then
+            echo "Detected uncommitted changes after build. See status below:"
+            git diff
+            exit 1
+          fi
+      - name: Emit package size
+        run: |
+          echo "Writing to action_package_size.json..."
+          echo "{ \"value\": $(du -sk dist | awk '{print $1 * 1024}'), \"tag\": \"Byte Size\" }" | tee action_package_size.json
+      - name: Emit runner memory
+        working-directory: ${{ github.workspace }}
+        run: |
+          free
+          echo "Writing to action_runner_memory.jsonl..."
+          echo "{ \"value\": $(awk '/^Mem/ {print $2}' <(free)), \"tag\": \"Total\" }" | tee action_runner_memory.jsonl
+          echo "{ \"value\": $(awk '/^Mem/ {print $3}' <(free)), \"tag\": \"Used\" }" | tee -a action_runner_memory.jsonl
+          echo "{ \"value\": $(awk '/^Mem/ {print $4}' <(free)), \"tag\": \"Free\" }" | tee -a action_runner_memory.jsonl
+          echo "{ \"value\": $(awk '/^Mem/ {print $5}' <(free)), \"tag\": \"Buff/Cache\" }" | tee -a action_runner_memory.jsonl
+      - name: Run stoat action
+        uses: ./
+        if: always()

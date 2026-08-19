@@ -1,0 +1,34 @@
+name: Test job failure status
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_REF: refs/heads/main
+      GITHUB_EVENT_NAME: push
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # Overwrite the .stoat/config.yaml with enabled: false so the action skips
+      - name: Set up stoat config (disabled)
+        run: |
+          mkdir -p .stoat
+          printf -- '---\nversion: 1\nenabled: false\n' > .stoat/config.yaml
+          echo "Stoat config:"
+          cat .stoat/config.yaml
+
+      - id: action
+        uses: .
+        with:
+          token: fake-token
+          pr_branch_name: main
+          actual_sha: ${{ github.sha }}
+          run_attempt: "2"
+          job_status: failure
+          run_matrix: "null"
+
+      - name: Assert action completed without error even when job_status is failure
+        run: |
+          echo "Action completed successfully even with job_status=failure (stoat was disabled)"
+          echo "PASS"

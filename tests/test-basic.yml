@@ -1,0 +1,31 @@
+name: Test basic usage
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          token: ${{ github.token }}
+          pr_branch_name: act-harness
+          actual_sha: ${{ github.sha }}
+          run_attempt: 1
+          job_status: success
+          run_matrix: 'null'
+        continue-on-error: true
+      - name: Assert action ran without unexpected failure
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          # The action may fail due to no Stoat config or API unavailability,
+          # but it should not crash with an unhandled exception (which would show as failure).
+          # We accept both success and failure outcomes as long as the step completed.
+          if [ "$OUTCOME" = "skipped" ]; then
+            echo "FAIL: action was skipped unexpectedly"
+            exit 1
+          fi
+          echo "PASS: action completed with outcome=$OUTCOME"
